@@ -104,4 +104,28 @@ public class UsuarioDAO {
 		}
 		return usuarios;
 	}
+    // Dentro da classe UsuarioDAO
+    public Usuario buscarPorLogin(String login) throws SQLException {
+        String sql = "SELECT * FROM usuarios WHERE login=?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, login);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Usuario u = new Usuario();
+                    u.setId(rs.getInt("id"));
+                    u.setNomeCompleto(rs.getString("nome_completo"));
+                    u.setCpf(rs.getString("cpf"));
+                    u.setEmail(rs.getString("email"));
+                    u.setSenha(rs.getString("senha"));
+                    u.setPerfil(PerfilAcesso.valueOf(rs.getString("perfil").toUpperCase()));
+                    u.setCargo(rs.getString("cargo"));
+                    u.setLogin(rs.getString("login"));
+                    return u;
+                }
+            }
+        }
+        return null;
+    }
 }
