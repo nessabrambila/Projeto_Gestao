@@ -4,8 +4,6 @@ import model.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainView extends JFrame {
     private JTabbedPane tabbedPane;
@@ -15,7 +13,7 @@ public class MainView extends JFrame {
         super("Sistema de Gestão de Projetos");
         this.usuarioLogado = usuarioLogado;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 700);
+        setSize(1200, 800); // Aumenta o tamanho da tela para acomodar os relatórios
         setLocationRelativeTo(null);
 
         initComponents();
@@ -24,10 +22,11 @@ public class MainView extends JFrame {
     private void initComponents() {
         tabbedPane = new JTabbedPane();
 
+        tabbedPane.addTab("Dashboard", new DashboardView());
+
         tabbedPane.addTab("Projetos", new ProjetoView());
         tabbedPane.addTab("Tarefas", new TarefaView());
 
-        // Lógica para mostrar as abas de acordo com o perfil
         switch (usuarioLogado.getPerfil()) {
             case ADMINISTRADOR:
                 tabbedPane.addTab("Usuários", new UsuarioView());
@@ -38,7 +37,6 @@ public class MainView extends JFrame {
                 tabbedPane.addTab("Equipes", new EquipeView());
                 break;
             case COLABORADOR:
-                // Colaboradores podem não ter acesso a gerenciar usuários e equipes
                 break;
         }
 

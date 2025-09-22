@@ -19,7 +19,6 @@ public class ProjetoView extends JPanel {
     private ProjetoDAO projetoDAO;
     private UsuarioDAO usuarioDAO;
 
-    // Campos do formulário
     private JTextField txtNome, txtDescricao;
     private JFormattedTextField txtDataInicio, txtDataFimPrevisto;
     private JComboBox<StatusProjeto> cmbStatus;
@@ -32,14 +31,12 @@ public class ProjetoView extends JPanel {
         this.usuarioDAO = new UsuarioDAO();
         setLayout(new BorderLayout(10, 10));
 
-        // Tabela de Projetos
         String[] colunas = {"ID", "Nome", "Gerente", "Status"};
         tabelaModelo = new DefaultTableModel(colunas, 0);
         tabelaProjetos = new JTable(tabelaModelo);
         JScrollPane scrollPane = new JScrollPane(tabelaProjetos);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Evento de seleção da tabela
         tabelaProjetos.getSelectionModel().addListSelectionListener(e -> {
             int linhaSelecionada = tabelaProjetos.getSelectedRow();
             if (linhaSelecionada >= 0) {
@@ -48,7 +45,6 @@ public class ProjetoView extends JPanel {
             }
         });
 
-        // Formulário de Projetos
         JPanel formPanel = criarFormulario();
         add(formPanel, BorderLayout.EAST);
 
@@ -66,31 +62,23 @@ public class ProjetoView extends JPanel {
 
         gbc.gridwidth = 1;
 
-        // Nome
         gbc.gridx = 0; gbc.gridy = 1; panel.add(new JLabel("Nome:"), gbc);
         gbc.gridx = 1; gbc.gridy = 1; txtNome = new JTextField(20); panel.add(txtNome, gbc);
 
-        // Descrição
         gbc.gridx = 0; gbc.gridy = 2; panel.add(new JLabel("Descrição:"), gbc);
         gbc.gridx = 1; gbc.gridy = 2; txtDescricao = new JTextField(20); panel.add(txtDescricao, gbc);
-
-        // Data Início
         gbc.gridx = 0; gbc.gridy = 3; panel.add(new JLabel("Data Início (yyyy-MM-dd):"), gbc);
         gbc.gridx = 1; gbc.gridy = 3; txtDataInicio = new JFormattedTextField(); panel.add(txtDataInicio, gbc);
 
-        // Data Fim Previsto
         gbc.gridx = 0; gbc.gridy = 4; panel.add(new JLabel("Data Fim Previsto (yyyy-MM-dd):"), gbc);
         gbc.gridx = 1; gbc.gridy = 4; txtDataFimPrevisto = new JFormattedTextField(); panel.add(txtDataFimPrevisto, gbc);
 
-        // Status
         gbc.gridx = 0; gbc.gridy = 5; panel.add(new JLabel("Status:"), gbc);
         gbc.gridx = 1; gbc.gridy = 5; cmbStatus = new JComboBox<>(StatusProjeto.values()); panel.add(cmbStatus, gbc);
 
-        // Gerente Responsável
         gbc.gridx = 0; gbc.gridy = 6; panel.add(new JLabel("Gerente:"), gbc);
         gbc.gridx = 1; gbc.gridy = 6; cmbGerente = new JComboBox<>(); carregarGerentes(); panel.add(cmbGerente, gbc);
 
-        // Botões
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnSalvar = new JButton("Salvar");
         btnNovo = new JButton("Novo");
@@ -114,7 +102,6 @@ public class ProjetoView extends JPanel {
         try {
             List<Usuario> usuarios = usuarioDAO.listarTodos();
             for (Usuario u : usuarios) {
-                // Apenas gerentes podem ser selecionados
                 if (u.getPerfil().name().equals("GERENTE")) {
                     cmbGerente.addItem(u);
                 }

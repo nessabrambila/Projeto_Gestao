@@ -18,7 +18,6 @@ public class UsuarioView extends JPanel {
     private JScrollPane scrollPane;
     private UsuarioDAO usuarioDAO;
 
-    // Campos do formulário
     private JTextField txtNome, txtCpf, txtEmail, txtCargo, txtLogin;
     private JPasswordField txtSenha;
     private JComboBox<PerfilAcesso> cmbPerfil;
@@ -29,14 +28,14 @@ public class UsuarioView extends JPanel {
         this.usuarioDAO = new UsuarioDAO();
         setLayout(new BorderLayout(10, 10));
 
-        // Inicializa a tabela
+        // Inicia a tabela
         String[] colunas = {"ID", "Nome", "Login", "Perfil"};
         tabelaModelo = new DefaultTableModel(colunas, 0);
         tabelaUsuarios = new JTable(tabelaModelo);
         scrollPane = new JScrollPane(tabelaUsuarios);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Evento de clique na tabela
+        // Clique na tabela
         tabelaUsuarios.getSelectionModel().addListSelectionListener(e -> {
             int linhaSelecionada = tabelaUsuarios.getSelectedRow();
             if (linhaSelecionada >= 0) {
@@ -45,11 +44,11 @@ public class UsuarioView extends JPanel {
             }
         });
 
-        // Inicializa o formulário
+        // Inicia o formulário
         JPanel formPanel = criarFormulario();
         add(formPanel, BorderLayout.EAST);
 
-        // Carrega os dados iniciais
+        // Carrega os dados pra começar
         carregarUsuarios();
     }
 
@@ -59,41 +58,32 @@ public class UsuarioView extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Título
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         panel.add(new JLabel("Cadastro/Edição de Usuários"), gbc);
 
         gbc.gridwidth = 1; // Reseta o gridwidth para 1
 
-        // Nome Completo
         gbc.gridx = 0; gbc.gridy = 1; panel.add(new JLabel("Nome Completo:"), gbc);
         gbc.gridx = 1; gbc.gridy = 1; txtNome = new JTextField(20); panel.add(txtNome, gbc);
 
-        // CPF
         gbc.gridx = 0; gbc.gridy = 2; panel.add(new JLabel("CPF:"), gbc);
         gbc.gridx = 1; gbc.gridy = 2; txtCpf = new JTextField(20); panel.add(txtCpf, gbc);
 
-        // Email
         gbc.gridx = 0; gbc.gridy = 3; panel.add(new JLabel("Email:"), gbc);
         gbc.gridx = 1; gbc.gridy = 3; txtEmail = new JTextField(20); panel.add(txtEmail, gbc);
 
-        // Login
         gbc.gridx = 0; gbc.gridy = 4; panel.add(new JLabel("Login:"), gbc);
         gbc.gridx = 1; gbc.gridy = 4; txtLogin = new JTextField(20); panel.add(txtLogin, gbc);
 
-        // Senha
         gbc.gridx = 0; gbc.gridy = 5; panel.add(new JLabel("Senha:"), gbc);
         gbc.gridx = 1; gbc.gridy = 5; txtSenha = new JPasswordField(20); panel.add(txtSenha, gbc);
 
-        // Cargo
         gbc.gridx = 0; gbc.gridy = 6; panel.add(new JLabel("Cargo:"), gbc);
         gbc.gridx = 1; gbc.gridy = 6; txtCargo = new JTextField(20); panel.add(txtCargo, gbc);
 
-        // Perfil
         gbc.gridx = 0; gbc.gridy = 7; panel.add(new JLabel("Perfil:"), gbc);
         gbc.gridx = 1; gbc.gridy = 7; cmbPerfil = new JComboBox<>(PerfilAcesso.values()); panel.add(cmbPerfil, gbc);
 
-        // Botões
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnSalvar = new JButton("Salvar");
         btnNovo = new JButton("Novo");
@@ -133,7 +123,7 @@ public class UsuarioView extends JPanel {
                 txtCpf.setText(usuario.getCpf());
                 txtEmail.setText(usuario.getEmail());
                 txtLogin.setText(usuario.getLogin());
-                txtSenha.setText(usuario.getSenha()); // Cuidado: Senha em texto plano não é ideal
+                txtSenha.setText("");
                 txtCargo.setText(usuario.getCargo());
                 cmbPerfil.setSelectedItem(usuario.getPerfil());
             }
@@ -143,28 +133,50 @@ public class UsuarioView extends JPanel {
     }
 
     private void salvarUsuario() {
+
+        String nome = txtNome.getText().trim();
+        String login = txtLogin.getText().trim();
+        String senha = new String(txtSenha.getPassword());
+
+        if (nome.isEmpty() || login.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nome e Login são campos obrigatórios.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         Usuario usuario = new Usuario();
-        usuario.setNomeCompleto(txtNome.getText());
+        usuario.setNomeCompleto(nome);
         usuario.setCpf(txtCpf.getText());
         usuario.setEmail(txtEmail.getText());
-        usuario.setLogin(txtLogin.getText());
-        usuario.setSenha(new String(txtSenha.getPassword()));
+        usuario.setLogin(login);
         usuario.setCargo(txtCargo.getText());
         usuario.setPerfil((PerfilAcesso) cmbPerfil.getSelectedItem());
 
         try {
             if (idUsuarioSelecionado == -1) {
-                // Inserir novo usuário
+
+                if (senha.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "A senha é obrigatória para novos usuários.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                usuario.setSenha(senha);
                 usuarioDAO.inserir(usuario);
                 JOptionPane.showMessageDialog(this, "Usuário salvo com sucesso!");
             } else {
                 // Atualizar usuário existente
                 usuario.setId(idUsuarioSelecionado);
+
+                if (!senha.isEmpty()) {
+                    usuario.setSenha(senha);
+                } else {
+                    // mantém a senha existente no banco de dados
+                    Usuario uExistente = usuarioDAO.buscarPorId(idUsuarioSelecionado);
+                    usuario.setSenha(uExistente.getSenha());
+                }
                 usuarioDAO.atualizar(usuario);
                 JOptionPane.showMessageDialog(this, "Usuário atualizado com sucesso!");
             }
             limparFormulario();
-            carregarUsuarios(); // Atualiza a tabela
+            carregarUsuarios();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar usuário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -178,7 +190,7 @@ public class UsuarioView extends JPanel {
                     usuarioDAO.deletar(idUsuarioSelecionado);
                     JOptionPane.showMessageDialog(this, "Usuário excluído com sucesso!");
                     limparFormulario();
-                    carregarUsuarios(); // Atualiza a tabela
+                    carregarUsuarios();
                 } catch (SQLException e) {
                     JOptionPane.showMessageDialog(this, "Erro ao excluir usuário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                 }

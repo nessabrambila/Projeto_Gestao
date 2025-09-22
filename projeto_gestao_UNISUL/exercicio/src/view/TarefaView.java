@@ -22,7 +22,6 @@ public class TarefaView extends JPanel {
     private ProjetoDAO projetoDAO;
     private UsuarioDAO usuarioDAO;
 
-    // Campos do formulário
     private JTextField txtTitulo, txtDescricao;
     private JComboBox<Projeto> cmbProjeto;
     private JComboBox<Usuario> cmbResponsavel;
@@ -37,7 +36,6 @@ public class TarefaView extends JPanel {
         this.usuarioDAO = new UsuarioDAO();
         setLayout(new BorderLayout(10, 10));
 
-        // Tabela de Tarefas
         String[] colunas = {"ID", "Título", "Projeto", "Responsável", "Status"};
         tabelaModelo = new DefaultTableModel(colunas, 0);
         tabelaTarefas = new JTable(tabelaModelo);
@@ -52,7 +50,6 @@ public class TarefaView extends JPanel {
             }
         });
 
-        // Formulário de Tarefas
         JPanel formPanel = criarFormulario();
         add(formPanel, BorderLayout.EAST);
 
@@ -70,35 +67,27 @@ public class TarefaView extends JPanel {
 
         gbc.gridwidth = 1;
 
-        // Título
         gbc.gridx = 0; gbc.gridy = 1; panel.add(new JLabel("Título:"), gbc);
         gbc.gridx = 1; gbc.gridy = 1; txtTitulo = new JTextField(20); panel.add(txtTitulo, gbc);
 
-        // Descrição
         gbc.gridx = 0; gbc.gridy = 2; panel.add(new JLabel("Descrição:"), gbc);
         gbc.gridx = 1; gbc.gridy = 2; txtDescricao = new JTextField(20); panel.add(txtDescricao, gbc);
 
-        // Projeto
         gbc.gridx = 0; gbc.gridy = 3; panel.add(new JLabel("Projeto:"), gbc);
         gbc.gridx = 1; gbc.gridy = 3; cmbProjeto = new JComboBox<>(); carregarProjetosCombo(); panel.add(cmbProjeto, gbc);
 
-        // Responsável
         gbc.gridx = 0; gbc.gridy = 4; panel.add(new JLabel("Responsável:"), gbc);
         gbc.gridx = 1; gbc.gridy = 4; cmbResponsavel = new JComboBox<>(); carregarResponsaveis(); panel.add(cmbResponsavel, gbc);
 
-        // Status
         gbc.gridx = 0; gbc.gridy = 5; panel.add(new JLabel("Status:"), gbc);
         gbc.gridx = 1; gbc.gridy = 5; cmbStatus = new JComboBox<>(StatusTarefa.values()); panel.add(cmbStatus, gbc);
 
-        // Data Início Prevista
         gbc.gridx = 0; gbc.gridy = 6; panel.add(new JLabel("Data Início Prevista (yyyy-MM-dd):"), gbc);
         gbc.gridx = 1; gbc.gridy = 6; txtDataInicioPrevista = new JFormattedTextField(); panel.add(txtDataInicioPrevista, gbc);
 
-        // Data Fim Prevista
         gbc.gridx = 0; gbc.gridy = 7; panel.add(new JLabel("Data Fim Prevista (yyyy-MM-dd):"), gbc);
         gbc.gridx = 1; gbc.gridy = 7; txtDataFimPrevista = new JFormattedTextField(); panel.add(txtDataFimPrevista, gbc);
 
-        // Botões
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnSalvar = new JButton("Salvar");
         btnNovo = new JButton("Novo");

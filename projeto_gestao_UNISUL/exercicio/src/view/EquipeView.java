@@ -48,7 +48,6 @@ public class EquipeView extends JPanel {
             }
         });
 
-        // Formulário e gestão de membros
         JPanel formPanel = criarFormulario();
         add(formPanel, BorderLayout.EAST);
 
@@ -66,13 +65,11 @@ public class EquipeView extends JPanel {
 
         gbc.gridwidth = 1;
 
-        // Nome e Descrição
         gbc.gridx = 0; gbc.gridy = 1; panel.add(new JLabel("Nome:"), gbc);
         gbc.gridx = 1; gbc.gridy = 1; txtNome = new JTextField(20); panel.add(txtNome, gbc);
         gbc.gridx = 0; gbc.gridy = 2; panel.add(new JLabel("Descrição:"), gbc);
         gbc.gridx = 1; gbc.gridy = 2; txtDescricao = new JTextField(20); panel.add(txtDescricao, gbc);
 
-        // Membros
         gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2; panel.add(new JLabel("Gerenciar Membros"), gbc);
 
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 1; panel.add(new JLabel("Disponíveis"), gbc);
@@ -96,7 +93,6 @@ public class EquipeView extends JPanel {
         btnAdicionarMembro.addActionListener(e -> adicionarMembro());
         btnRemoverMembro.addActionListener(e -> removerMembro());
 
-        // Botões de ação
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnSalvar = new JButton("Salvar");
         btnNovo = new JButton("Novo");
@@ -164,8 +160,6 @@ public class EquipeView extends JPanel {
             if (equipe != null) {
                 txtNome.setText(equipe.getNome());
                 txtDescricao.setText(equipe.getDescricao());
-
-                // Limpa as listas e distribui os usuários
                 modeloMembrosDisponiveis.clear();
                 modeloMembrosEquipe.clear();
                 List<Usuario> todosUsuarios = usuarioDAO.listarTodos();

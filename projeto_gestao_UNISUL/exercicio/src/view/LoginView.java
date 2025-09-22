@@ -30,15 +30,12 @@ public class LoginView extends JFrame {
             String senha = new String(senhaField.getPassword());
             try {
                 // TODO: Adicionar um método de autenticação ao UsuarioDAO
-                // Por enquanto, usaremos a busca por login para simular a autenticação
-                // Em um projeto real, a senha deveria ser criptografada.
                 Usuario usuario = usuarioDAO.buscarPorLogin(login);
                 if (usuario != null && usuario.getSenha().equals(senha)) {
                     JOptionPane.showMessageDialog(this, "Login bem-sucedido!");
-                    // Abre a tela principal
                     MainView mainView = new MainView(usuario);
                     mainView.setVisible(true);
-                    this.dispose(); // Fecha a tela de login
+                    this.dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Login ou senha inválidos.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
@@ -76,7 +73,7 @@ public class LoginView extends JFrame {
 
         add(panel, BorderLayout.CENTER);
         pack();
-        setLocationRelativeTo(null); // Centraliza a tela
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
