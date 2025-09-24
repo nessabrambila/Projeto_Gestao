@@ -3,6 +3,7 @@
 
 
       1. Introdução:
+      
           O documento atual foi pensando em instruir os requisitos de software para um
           Sistema de Gestão de Projetos e Equipes, com qual objetivo se tem de detalhar as
           funcionalidades características do sistema e suas limitações, dividindo em requisitos
