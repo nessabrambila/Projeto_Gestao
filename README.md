@@ -1,6 +1,6 @@
-# Projeto_Gestao
+# Projeto Gestao
 
-Projeto Unisul
+
 
       1. Introdução:
           O documento atual foi pensando em instruir os requisitos de software para um
